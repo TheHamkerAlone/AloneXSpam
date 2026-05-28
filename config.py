@@ -1,48 +1,81 @@
 import logging
-
-from telethon import TelegramClient
-
 from os import getenv
+from telethon import TelegramClient, events
 from AltBots.data import ALTRON
+from dotenv import load_dotenv
 
+load_dotenv()
 
 logging.basicConfig(format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s', level=logging.WARNING)
 
-
 # VALUES REQUIRED FOR XBOTS
-API_ID = 18136872
-API_HASH = "312d861b78efcd1b02183b2ab52a83a4"
+API_ID = int(getenv("API_ID", 18136872))
+API_HASH = getenv("API_HASH", "312d861b78efcd1b02183b2ab52a83a4")
 CMD_HNDLR = getenv("CMD_HNDLR", default=".")
 HEROKU_APP_NAME = getenv("HEROKU_APP_NAME", None)
 HEROKU_API_KEY = getenv("HEROKU_API_KEY", None)
 
-BOT_TOKEN = getenv("BOT_TOKEN", default=None)
-BOT_TOKEN2 = getenv("BOT_TOKEN2", default=None)
-BOT_TOKEN3 = getenv("BOT_TOKEN3", default=None)
-BOT_TOKEN4 = getenv("BOT_TOKEN4", default=None)
-BOT_TOKEN5 = getenv("BOT_TOKEN5", default=None)
-BOT_TOKEN6 = getenv("BOT_TOKEN6", default=None)
-BOT_TOKEN7 = getenv("BOT_TOKEN7", default=None)
-BOT_TOKEN8 = getenv("BOT_TOKEN8", default=None)
-BOT_TOKEN9 = getenv("BOT_TOKEN9", default=None)
-BOT_TOKEN10 = getenv("BOT_TOKEN10", default=None)
-
 SUDO_USERS = list(map(lambda x: int(x), getenv("SUDO_USERS", default="5518687442").split()))
 for x in ALTRON:
-    SUDO_USERS.append(x)
+    if x not in SUDO_USERS:
+        SUDO_USERS.append(x)
 OWNER_ID = int(getenv("OWNER_ID", default="6079943111"))
-SUDO_USERS.append(OWNER_ID)
-
+if OWNER_ID not in SUDO_USERS:
+    SUDO_USERS.append(OWNER_ID)
 
 # ------------- CLIENTS -------------
 
-X1 = TelegramClient('X1', API_ID, API_HASH).start(bot_token=BOT_TOKEN)
-X2 = TelegramClient('X2', API_ID, API_HASH).start(bot_token=BOT_TOKEN2)
-X3 = TelegramClient('X3', API_ID, API_HASH).start(bot_token=BOT_TOKEN3)
-X4 = TelegramClient('X4', API_ID, API_HASH).start(bot_token=BOT_TOKEN4)
-X5 = TelegramClient('X5', API_ID, API_HASH).start(bot_token=BOT_TOKEN5)
-X6 = TelegramClient('X6', API_ID, API_HASH).start(bot_token=BOT_TOKEN6)
-X7 = TelegramClient('X7', API_ID, API_HASH).start(bot_token=BOT_TOKEN7)
-X8 = TelegramClient('X8', API_ID, API_HASH).start(bot_token=BOT_TOKEN8)
-X9 = TelegramClient('X9', API_ID, API_HASH).start(bot_token=BOT_TOKEN9)
-X10 = TelegramClient('X10', API_ID, API_HASH).start(bot_token=BOT_TOKEN10)
+BOT_TOKENS = [
+    getenv("BOT_TOKEN"),
+    getenv("BOT_TOKEN2"),
+    getenv("BOT_TOKEN3"),
+    getenv("BOT_TOKEN4"),
+    getenv("BOT_TOKEN5"),
+    getenv("BOT_TOKEN6"),
+    getenv("BOT_TOKEN7"),
+    getenv("BOT_TOKEN8"),
+    getenv("BOT_TOKEN9"),
+    getenv("BOT_TOKEN10"),
+]
+
+clients = []
+for i, token in enumerate(BOT_TOKENS, start=1):
+    if token:
+        try:
+            client = TelegramClient(f"X{i}", API_ID, API_HASH).start(bot_token=token)
+            clients.append(client)
+        except Exception as e:
+            print(f"Failed to start client X{i}: {e}")
+
+# Maintain backward compatibility for modules
+X1 = clients[0] if len(clients) > 0 else None
+X2 = clients[1] if len(clients) > 1 else None
+X3 = clients[2] if len(clients) > 2 else None
+X4 = clients[3] if len(clients) > 3 else None
+X5 = clients[4] if len(clients) > 4 else None
+X6 = clients[5] if len(clients) > 5 else None
+X7 = clients[6] if len(clients) > 6 else None
+X8 = clients[7] if len(clients) > 7 else None
+X9 = clients[8] if len(clients) > 8 else None
+X10 = clients[9] if len(clients) > 9 else None
+
+def on_cmd(pattern, **kwargs):
+    def decorator(func):
+        for client in clients:
+            client.add_event_handler(func, events.NewMessage(incoming=True, pattern=r"\%s" % CMD_HNDLR + pattern, **kwargs))
+        return func
+    return decorator
+
+def on_msg(**kwargs):
+    def decorator(func):
+        for client in clients:
+            client.add_event_handler(func, events.NewMessage(incoming=True, **kwargs))
+        return func
+    return decorator
+
+def on_cb(pattern=None, **kwargs):
+    def decorator(func):
+        for client in clients:
+            client.add_event_handler(func, events.CallbackQuery(pattern=pattern, **kwargs))
+        return func
+    return decorator

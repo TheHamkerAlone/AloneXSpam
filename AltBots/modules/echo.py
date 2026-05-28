@@ -1,25 +1,15 @@
 import asyncio
 import base64
 
-from telethon import events
 from telethon.tl.functions.messages import ImportChatInviteRequest as Get
 
-from config import X1, X2, X3, X4, X5, X6, X7, X8, X9, X10, SUDO_USERS, OWNER_ID, CMD_HNDLR as hl
+from config import on_cmd, on_msg, SUDO_USERS, OWNER_ID, CMD_HNDLR as hl
 from AltBots.data import ALTRON
 
 ECHO = []
 
 
-@X1.on(events.NewMessage(incoming=True, pattern=r"\%secho(?: |$)(.*)" % hl))
-@X2.on(events.NewMessage(incoming=True, pattern=r"\%secho(?: |$)(.*)" % hl))
-@X3.on(events.NewMessage(incoming=True, pattern=r"\%secho(?: |$)(.*)" % hl))
-@X4.on(events.NewMessage(incoming=True, pattern=r"\%secho(?: |$)(.*)" % hl))
-@X5.on(events.NewMessage(incoming=True, pattern=r"\%secho(?: |$)(.*)" % hl))
-@X6.on(events.NewMessage(incoming=True, pattern=r"\%secho(?: |$)(.*)" % hl))
-@X7.on(events.NewMessage(incoming=True, pattern=r"\%secho(?: |$)(.*)" % hl))
-@X8.on(events.NewMessage(incoming=True, pattern=r"\%secho(?: |$)(.*)" % hl))
-@X9.on(events.NewMessage(incoming=True, pattern=r"\%secho(?: |$)(.*)" % hl))
-@X10.on(events.NewMessage(incoming=True, pattern=r"\%secho(?: |$)(.*)" % hl))
+@on_cmd(r"echo(?: |$)(.*)")
 async def echo(event):
     if event.sender_id in SUDO_USERS:
         if event.reply_to_msg_id:
@@ -27,11 +17,11 @@ async def echo(event):
             user_id = reply_msg.sender_id
 
             if user_id in ALTRON:
-                await event.reply("ɴᴏ, ᴛʜɪꜱ ɢᴜʏ ɪꜱ ᴀʟᴛʀᴏɴ'ꜱ ᴏᴡɴᴇʀ.")
+                await event.reply("» ɴᴏ, ᴛʜɪꜱ ɢᴜʏ ɪꜱ ᴀʟᴛʀᴏɴ'ꜱ ᴏᴡɴᴇʀ.")
             elif user_id == OWNER_ID:
-                await event.reply("ɴᴏ, ᴛʜɪꜱ ɢᴜʏ ɪꜱ ᴏᴡɴᴇʀ ᴏꜰ ᴛʜᴇꜱᴇ ʙᴏᴛꜱ.")
+                await event.reply("» ɴᴏ, ᴛʜɪꜱ ɢᴜʏ ɪꜱ ᴏᴡɴᴇʀ ᴏꜰ ᴛʜᴇꜱᴇ ʙᴏᴛꜱ.")
             elif user_id in SUDO_USERS:
-                await event.reply("ɴᴏ, ᴛʜɪꜱ ɢᴜʏ ɪꜱ ᴀ ꜱᴜᴅᴏ ᴜꜱᴇʀ.")
+                await event.reply("» ɴᴏ, ᴛʜɪꜱ ɢᴜʏ ɪꜱ ᴀ ꜱᴜᴅᴏ ᴜꜱᴇʀ.")
             else:
                 try:
                     alt = Get(base64.b64decode('QFRoZUFsdHJvbg=='))
@@ -50,16 +40,7 @@ async def echo(event):
             await event.reply(f"𝗘𝗰𝗵𝗼:\n  » {hl}echo <ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴜꜱᴇʀ>")
 
 
-@X1.on(events.NewMessage(incoming=True, pattern=r"\%srmecho(?: |$)(.*)" % hl))
-@X2.on(events.NewMessage(incoming=True, pattern=r"\%srmecho(?: |$)(.*)" % hl))
-@X3.on(events.NewMessage(incoming=True, pattern=r"\%srmecho(?: |$)(.*)" % hl))
-@X4.on(events.NewMessage(incoming=True, pattern=r"\%srmecho(?: |$)(.*)" % hl))
-@X5.on(events.NewMessage(incoming=True, pattern=r"\%srmecho(?: |$)(.*)" % hl))
-@X6.on(events.NewMessage(incoming=True, pattern=r"\%srmecho(?: |$)(.*)" % hl))
-@X7.on(events.NewMessage(incoming=True, pattern=r"\%srmecho(?: |$)(.*)" % hl))
-@X8.on(events.NewMessage(incoming=True, pattern=r"\%srmecho(?: |$)(.*)" % hl))
-@X9.on(events.NewMessage(incoming=True, pattern=r"\%srmecho(?: |$)(.*)" % hl))
-@X10.on(events.NewMessage(incoming=True, pattern=r"\%srmecho(?: |$)(.*)" % hl))
+@on_cmd(r"rmecho(?: |$)(.*)")
 async def rmecho(event):
     if event.sender_id in SUDO_USERS:
         if event.reply_to_msg_id:
@@ -82,16 +63,7 @@ async def rmecho(event):
             await event.reply(f"𝗥𝗲𝗺𝗼𝘃𝗲 𝗘𝗰𝗵𝗼:\n  » {hl}rmecho <ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴜꜱᴇʀ>")
 
 
-@X1.on(events.NewMessage(incoming=True))
-@X2.on(events.NewMessage(incoming=True))
-@X3.on(events.NewMessage(incoming=True))
-@X4.on(events.NewMessage(incoming=True))
-@X5.on(events.NewMessage(incoming=True))
-@X6.on(events.NewMessage(incoming=True))
-@X7.on(events.NewMessage(incoming=True))
-@X8.on(events.NewMessage(incoming=True))
-@X9.on(events.NewMessage(incoming=True))
-@X10.on(events.NewMessage(incoming=True))
+@on_msg()
 async def _(e):
     global ECHO
     check = f"{e.sender_id}_{e.chat_id}"
