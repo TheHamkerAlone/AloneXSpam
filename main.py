@@ -28,19 +28,29 @@ def load_plugins(plugin_name):
 
 
 async def main():
+    # Start all clients
+    started_clients = []
+    for client in clients:
+        try:
+            await client.start(bot_token=client._bot_token)
+            started_clients.append(client)
+            print(f"Successfully started client {client.session.filename}")
+        except Exception as e:
+            print(f"Failed to start client {client.session.filename}: {e}")
+
+    if not started_clients:
+        print("No clients started. Please check your BOT_TOKENs.")
+        return
+
     files = glob.glob("AltBots/modules/*.py")
     for name in files:
         plugin_name = Path(name).stem
         load_plugins(plugin_name)
 
-    if not clients:
-        print("No clients started. Please check your BOT_TOKENs.")
-        return
-
     print("\n𝐗𝐁𝐨𝐭𝐬 𝐃𝐞𝐩𝐥𝐨𝐲𝐞𝐝 𝐒𝐮𝐜𝐜𝐞𝐬𝐬𝐟𝐮𝐥𝐥𝐲 ⚡\nMy Master ---> @ALONE_WAS_BOT")
 
     # Run all clients until disconnected
-    await asyncio.gather(*(client.run_until_disconnected() for client in clients))
+    await asyncio.gather(*(client.run_until_disconnected() for client in started_clients))
 
 
 if __name__ == "__main__":
@@ -48,3 +58,5 @@ if __name__ == "__main__":
         asyncio.run(main())
     except KeyboardInterrupt:
         pass
+    except Exception as e:
+        print(f"Fatal error: {e}")

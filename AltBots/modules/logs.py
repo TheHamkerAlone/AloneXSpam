@@ -1,46 +1,20 @@
-import asyncio
-import heroku3
-
-from config import on_cmd, clients, SUDO_USERS, OWNER_ID, HEROKU_API_KEY, HEROKU_APP_NAME, CMD_HNDLR as hl
-
-from datetime import datetime
-
+from config import on_cmd, clients, SUDO_USERS, OWNER_ID, CMD_HNDLR as hl
+from telethon import events
+import os
 
 @on_cmd(r"logs(?: |$)(.*)")
 async def logs(legend):
     if legend.sender_id == OWNER_ID:
-        if (HEROKU_APP_NAME is None) or (HEROKU_API_KEY is None):
-            await legend.reply(
-                "First Set These Vars In Heroku :  `HEROKU_API_KEY` And `HEROKU_APP_NAME`.",
-            )
-            return
-
-        try:
-            Heroku = heroku3.from_key(HEROKU_API_KEY)
-            app = Heroku.app(HEROKU_APP_NAME)
-        except BaseException:
-            await legend.reply(
-                "Make Sure Your Heroku API Key & App Name Are Configured Correctly In Heroku."
-            )
-            return
-
-        logs = app.get_log()
-        start = datetime.now()
-        fetch = await legend.reply(f"__Fetching Logs...__")
-    
-        with open("AltLogs.txt", "w") as logfile:
-            logfile.write("⚡ XBOTS ⚡ [ Bot Logs ]\n\n" + logs)
-
-        end = datetime.now()
-        ms = (end-start).seconds
-        await asyncio.sleep(1)
-
-        try:
-            if clients:
-                await clients[0].send_file(legend.chat_id, "AltLogs.txt", caption=f"⚡ **XBOTS LOGS** ⚡\n  » **ᴛɪᴍᴇ ᴛᴀᴋᴇɴ:** `{ms} ꜱᴇᴄᴏɴᴅꜱ`")
-            await fetch.delete()
-        except Exception as e:
-            await fetch.edit(f"An Exception Occured!\n\n**ERROR:** {str(e)}")
+        # On VPS, we can try to send the nohup.out or a specific log file if it exists
+        log_file = "bot.log" # Assume we might be logging to bot.log
+        if os.path.exists(log_file):
+            try:
+                if clients:
+                    await clients[0].send_file(legend.chat_id, log_file, caption=f"⚡ **XBOTS LOGS (VPS)** ⚡")
+            except Exception as e:
+                await legend.reply(f"An Exception Occured!\n\n**ERROR:** {str(e)}")
+        else:
+            await legend.reply("» ɴᴏ ʟᴏɢ ꜰɪʟᴇ ꜰᴏᴜɴᴅ ᴏɴ ᴠᴘꜱ.")
 
     elif legend.sender_id in SUDO_USERS:
         await legend.reply("» ꜱᴏʀʀʏ, ᴏɴʟʏ ᴏᴡɴᴇʀ ᴄᴀɴ ᴀᴄᴄᴇꜱꜱ ᴛʜɪꜱ ᴄᴏᴍᴍᴀɴᴅ.")

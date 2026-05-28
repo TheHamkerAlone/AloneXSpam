@@ -12,8 +12,6 @@ logging.basicConfig(format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s'
 API_ID = int(getenv("API_ID", 18136872))
 API_HASH = getenv("API_HASH", "312d861b78efcd1b02183b2ab52a83a4")
 CMD_HNDLR = getenv("CMD_HNDLR", default=".")
-HEROKU_APP_NAME = getenv("HEROKU_APP_NAME", None)
-HEROKU_API_KEY = getenv("HEROKU_API_KEY", None)
 
 SUDO_USERS = list(map(lambda x: int(x), getenv("SUDO_USERS", default="8458947967").split()))
 for x in ALTRON:
@@ -41,11 +39,9 @@ BOT_TOKENS = [
 clients = []
 for i, token in enumerate(BOT_TOKENS, start=1):
     if token:
-        try:
-            client = TelegramClient(f"X{i}", API_ID, API_HASH).start(bot_token=token)
-            clients.append(client)
-        except Exception as e:
-            print(f"Failed to start client X{i}: {e}")
+        client = TelegramClient(f"X{i}", API_ID, API_HASH)
+        client._bot_token = token
+        clients.append(client)
 
 # Maintain backward compatibility for modules
 X1 = clients[0] if len(clients) > 0 else None
