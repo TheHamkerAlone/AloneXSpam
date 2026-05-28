@@ -1,6 +1,5 @@
 from telethon import __version__, events, Button
-
-from config import X1, X2, X3, X4, X5, X6, X7, X8, X9, X10
+from config import on_msg
 
 
 START_BUTTON = [
@@ -17,17 +16,7 @@ START_BUTTON = [
 ]
 
 
-@X1.on(events.NewMessage(pattern="/start"))
-@X2.on(events.NewMessage(pattern="/start"))
-@X3.on(events.NewMessage(pattern="/start"))
-@X4.on(events.NewMessage(pattern="/start"))
-@X5.on(events.NewMessage(pattern="/start"))
-@X6.on(events.NewMessage(pattern="/start"))
-@X7.on(events.NewMessage(pattern="/start"))
-@X7.on(events.NewMessage(pattern="/start"))
-@X8.on(events.NewMessage(pattern="/start"))
-@X9.on(events.NewMessage(pattern="/start"))
-@X10.on(events.NewMessage(pattern="/start"))
+@on_msg(pattern="/start")
 async def start(event):              
     if event.is_private:
         AltBot = await event.client.get_me()
