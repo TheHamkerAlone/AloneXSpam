@@ -31,11 +31,11 @@ BOT_TOKENS = [
     getenv("BOT_TOKEN3", "8614627276:AAGVqWSTx9AYum4oLeXj4BhNCAaIgZ8hRgY"),
     getenv("BOT_TOKEN4", "8991144749:AAHkyr5QN-O0W1q2LJDevOlOFvoyKESxpYQ"),
     getenv("BOT_TOKEN5", "8890147072:AAGtRgG9iBBLOsoWkXwt0qw8Ujzbdat9-U0"),
-    getenv("BOT_TOKEN6"),
-    getenv("BOT_TOKEN7"),
-    getenv("BOT_TOKEN8"),
-    getenv("BOT_TOKEN9"),
-    getenv("BOT_TOKEN10"),
+    getenv("BOT_TOKEN6", "8641133659:AAEupBEIKzb2YRLSus091ySpUMVZG0y5oyU"),
+    getenv("BOT_TOKEN7", "8836491262:AAEEzh2AESE62WctEuaAuLlt_LtMsu8Kegw"),
+    getenv("BOT_TOKEN8", "7809660984:AAHWbS5oKvQ8-62bRQ8pixhDROB2giWdH_w"),
+    getenv("BOT_TOKEN9", "8845653468:AAEHQxsGyKvPM7aH4G2wqD9YBA3G2GZfNGc"),
+    getenv("BOT_TOKEN10", ""),
 ]
 
 clients = []
