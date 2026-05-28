@@ -8,11 +8,27 @@ load_dotenv()
 
 logging.basicConfig(format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s', level=logging.WARNING)
 
-# VALUES REQUIRED FOR XBOTS
+# --- VALUES REQUIRED FOR XBOTS ---
+# Get from my.telegram.org
 API_ID = int(getenv("API_ID", 18136872))
 API_HASH = getenv("API_HASH", "312d861b78efcd1b02183b2ab52a83a4")
+
+# Bot tokens from @BotFather
+BOT_TOKEN = getenv("BOT_TOKEN", None)
+BOT_TOKEN2 = getenv("BOT_TOKEN2", None)
+BOT_TOKEN3 = getenv("BOT_TOKEN3", None)
+BOT_TOKEN4 = getenv("BOT_TOKEN4", None)
+BOT_TOKEN5 = getenv("BOT_TOKEN5", None)
+BOT_TOKEN6 = getenv("BOT_TOKEN6", None)
+BOT_TOKEN7 = getenv("BOT_TOKEN7", None)
+BOT_TOKEN8 = getenv("BOT_TOKEN8", None)
+BOT_TOKEN9 = getenv("BOT_TOKEN9", None)
+BOT_TOKEN10 = getenv("BOT_TOKEN10", None)
+
+# Commands handler
 CMD_HNDLR = getenv("CMD_HNDLR", default=".")
 
+# Sudo users and Owner
 SUDO_USERS = list(map(lambda x: int(x), getenv("SUDO_USERS", default="5518687442").split()))
 for x in ALTRON:
     if x not in SUDO_USERS:
@@ -21,19 +37,11 @@ OWNER_ID = int(getenv("OWNER_ID", default="6079943111"))
 if OWNER_ID not in SUDO_USERS:
     SUDO_USERS.append(OWNER_ID)
 
-# ------------- CLIENTS -------------
+# ------------- CLIENTS INITIALIZATION -------------
 
 BOT_TOKENS = [
-    getenv("BOT_TOKEN"),
-    getenv("BOT_TOKEN2"),
-    getenv("BOT_TOKEN3"),
-    getenv("BOT_TOKEN4"),
-    getenv("BOT_TOKEN5"),
-    getenv("BOT_TOKEN6"),
-    getenv("BOT_TOKEN7"),
-    getenv("BOT_TOKEN8"),
-    getenv("BOT_TOKEN9"),
-    getenv("BOT_TOKEN10"),
+    BOT_TOKEN, BOT_TOKEN2, BOT_TOKEN3, BOT_TOKEN4, BOT_TOKEN5,
+    BOT_TOKEN6, BOT_TOKEN7, BOT_TOKEN8, BOT_TOKEN9, BOT_TOKEN10
 ]
 
 clients = []
@@ -54,6 +62,8 @@ X7 = clients[6] if len(clients) > 6 else None
 X8 = clients[7] if len(clients) > 7 else None
 X9 = clients[8] if len(clients) > 8 else None
 X10 = clients[9] if len(clients) > 9 else None
+
+# --- EVENT HELPERS ---
 
 def on_cmd(pattern, **kwargs):
     def decorator(func):
