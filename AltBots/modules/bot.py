@@ -1,5 +1,8 @@
 import sys
-import heroku3
+try:
+    import heroku3
+except ImportError:
+    heroku3 = None
 
 from config import on_cmd, clients, OWNER_ID, SUDO_USERS, HEROKU_APP_NAME, HEROKU_API_KEY, CMD_HNDLR as hl
 
@@ -33,13 +36,21 @@ async def restart(e):
 @on_cmd(r"sudo(?: |$)(.*)")
 async def addsudo(event):
     if event.sender_id == OWNER_ID:
+        if not heroku3:
+            await event.reply("» `heroku3` ʟɪʙʀᴀʀʏ ɪꜱ ᴍɪꜱꜱɪɴɢ !!")
+            return
+
         Heroku = heroku3.from_key(HEROKU_API_KEY)
         sudousers = getenv("SUDO_USERS", default="")
 
         ok = await event.reply(f"» __ᴀᴅᴅɪɴɢ ᴜꜱᴇʀ ᴀꜱ ꜱᴜᴅᴏ...__")
         target = ""
         if HEROKU_APP_NAME is not None:
-            app = Heroku.app(HEROKU_APP_NAME)
+            try:
+                app = Heroku.app(HEROKU_APP_NAME)
+            except Exception as e:
+                await ok.edit(f"**HEROKU ERROR:** `{e}`")
+                return
         else:
             await ok.edit("`[HEROKU]:" "\nPlease Setup Your` **HEROKU_APP_NAME**")
             return

@@ -1,5 +1,8 @@
 import asyncio
-import heroku3
+try:
+    import heroku3
+except ImportError:
+    heroku3 = None
 
 from config import on_cmd, clients, SUDO_USERS, OWNER_ID, HEROKU_API_KEY, HEROKU_APP_NAME, CMD_HNDLR as hl
 
@@ -9,6 +12,10 @@ from datetime import datetime
 @on_cmd(r"logs(?: |$)(.*)")
 async def logs(legend):
     if legend.sender_id == OWNER_ID:
+        if not heroku3:
+            await legend.reply("» `heroku3` ʟɪʙʀᴀʀʏ ɪꜱ ᴍɪꜱꜱɪɴɢ !!")
+            return
+
         if (HEROKU_APP_NAME is None) or (HEROKU_API_KEY is None):
             await legend.reply(
                 "First Set These Vars In Heroku :  `HEROKU_API_KEY` And `HEROKU_APP_NAME`.",
@@ -24,7 +31,12 @@ async def logs(legend):
             )
             return
 
-        logs = app.get_log()
+        try:
+            logs = app.get_log()
+        except Exception as e:
+            await legend.reply(f"**HEROKU ERROR:** `{e}`")
+            return
+
         start = datetime.now()
         fetch = await legend.reply(f"__Fetching Logs...__")
     
