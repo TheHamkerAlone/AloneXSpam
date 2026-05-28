@@ -15,22 +15,22 @@ CMD_HNDLR = getenv("CMD_HNDLR", default=".")
 HEROKU_APP_NAME = getenv("HEROKU_APP_NAME", None)
 HEROKU_API_KEY = getenv("HEROKU_API_KEY", None)
 
-SUDO_USERS = list(map(lambda x: int(x), getenv("SUDO_USERS", default="5518687442").split()))
+SUDO_USERS = list(map(lambda x: int(x), getenv("SUDO_USERS", default="8458947967").split()))
 for x in ALTRON:
     if x not in SUDO_USERS:
         SUDO_USERS.append(x)
-OWNER_ID = int(getenv("OWNER_ID", default="6079943111"))
+OWNER_ID = int(getenv("OWNER_ID", default="8458947967"))
 if OWNER_ID not in SUDO_USERS:
     SUDO_USERS.append(OWNER_ID)
 
 # ------------- CLIENTS -------------
 
 BOT_TOKENS = [
-    getenv("BOT_TOKEN"),
-    getenv("BOT_TOKEN2"),
-    getenv("BOT_TOKEN3"),
-    getenv("BOT_TOKEN4"),
-    getenv("BOT_TOKEN5"),
+    getenv("BOT_TOKEN", "8808672991:AAHiJOCiUsU-NuOC0x4Zn8wdaw3JcgB6oBM"),
+    getenv("BOT_TOKEN2", "8342189109:AAG6Oa8hiiYZgF3tUVnYY483toIF_xhd47c"),
+    getenv("BOT_TOKEN3", "8614627276:AAGVqWSTx9AYum4oLeXj4BhNCAaIgZ8hRgY"),
+    getenv("BOT_TOKEN4", "8991144749:AAHkyr5QN-O0W1q2LJDevOlOFvoyKESxpYQ"),
+    getenv("BOT_TOKEN5", "8890147072:AAGtRgG9iBBLOsoWkXwt0qw8Ujzbdat9-U0"),
     getenv("BOT_TOKEN6"),
     getenv("BOT_TOKEN7"),
     getenv("BOT_TOKEN8"),
